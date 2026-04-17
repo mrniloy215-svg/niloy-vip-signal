@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Niloy VIP Signal</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: fixed;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Fullscreen Website - পটভূমি */
+.fullscreen-website {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.fullscreen-website iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* ছোট স্কয়ার সিগন্যাল কার্ড - খুব ছোট */
+.signal-square {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 130px;
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  border-radius: 16px;
+  padding: 10px 8px;
+  z-index: 100;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 0 1.5px #3b82f6;
+  cursor: grab;
+  backdrop-filter: blur(4px);
+}
+
+.signal-square:active {
+  cursor: grabbing;
+}
+
+/* ব্র্যান্ড নাম - ছোট */
+.brand-name {
+  font-size: 9px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #facc15, #ef4444);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+/* টাইমার - ছোট */
+.timer-number {
+  font-size: 22px;
+  font-weight: 800;
+  color: #facc15;
+  background: #0f172a;
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 30px;
+  font-family: monospace;
+  margin-bottom: 6px;
+  border: 1px solid #3b82f6;
+}
+
+/* সিগন্যাল - ছোট */
+.signal-value {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 6px 0;
+  letter-spacing: 1px;
+}
+
+.signal-big {
+  color: #ef4444;
+}
+
+.signal-small {
+  color: #22c55e;
+}
+
+/* ULTRA WIN STREAK - খুব ছোট */
+.streak-text {
+  font-size: 6px;
+  color: #94a3b8;
+  letter-spacing: 1px;
+  margin: 4px 0;
+}
+
+/* টেলিগ্রাম - ছোট */
+.telegram-link {
+  display: inline-block;
+  background: #1e293b;
+  color: #60a5fa;
+  text-decoration: none;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 7px;
+  font-weight: bold;
+  margin-top: 4px;
+  border: 1px solid #3b82f6;
+}
+
+/* Minimize বাটন */
+.minimize-btn {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* পাসওয়ার্ড লক */
+.lock {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.lock h2 {
+  color: #facc15;
+  margin-bottom: 20px;
+  font-size: 26px;
+}
+
+.lock input {
+  padding: 10px 16px;
+  font-size: 15px;
+  width: 220px;
+  border-radius: 30px;
+  border: none;
+  text-align: center;
+}
+
+.lock button {
+  margin-top: 12px;
+  padding: 8px 25px;
+  font-size: 15px;
+  border: none;
+  border-radius: 30px;
+  background: #3b82f6;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.lock .err {
+  color: #ef4444;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+/* বাবল */
+.bubble {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #1e293b;
+  color: #facc15;
+  padding: 5px 12px;
+  border-radius: 30px;
+  display: none;
+  z-index: 9999;
+  border: 1px solid #3b82f6;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="lock" id="lock">
+  <h2>NILOY VIP</h2>
+  <input type="password" id="pwd" placeholder="Enter Password">
+  <button onclick="unlock()">Unlock</button>
+  <div class="err" id="err"></div>
+</div>
+
+<div id="mainApp" style="display:none;">
+  <!-- পটভূমিতে পুরো সাইট -->
+  <div class="fullscreen-website">
+    <iframe src="https://tkclub2.com/#/register?invitationCode=38752316577"></iframe>
+  </div>
+
+  <!-- ছোট স্কয়ার সিগন্যাল কার্ড -->
+  <div class="signal-square" id="overlay">
+    <button class="minimize-btn" onclick="minimize()">−</button>
+    
+    <div class="brand-name">NILOY VIP</div>
+    
+    <div class="timer-number" id="timer">30s</div>
+    
+    <div class="signal-value" id="signal">--</div>
+    
+    <div class="streak-text">WIN STREAK</div>
+    
+    <a href="https://t.me/+2BLul52LvcI2YTFl" target="_blank" class="telegram-link">TELEGRAM</a>
+  </div>
+</div>
+
+<div class="bubble" id="bubble" onclick="restore()">NILOY</div>
+
+<script>
+const PASSWORD = "NILOY007";
+
+function unlock() {
+  if(document.getElementById('pwd').value === PASSWORD) {
+    document.getElementById('lock').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+  } else {
+    document.getElementById('err').innerText = 'Wrong Password';
+  }
+}
+
+function getBDTime() {
+  return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Dhaka"}));
+}
+
+let lastSlot = null;
+let signalDiv = document.getElementById('signal');
+let timerDiv = document.getElementById('timer');
+let overlay = document.getElementById('overlay');
+
+function generateSignal() {
+  let isBig = Math.random() < 0.5;
+  let signalText = isBig ? "BIG" : "SMALL";
+  signalDiv.innerHTML = signalText;
+  
+  if(isBig) {
+    signalDiv.className = "signal-value signal-big";
+  } else {
+    signalDiv.className = "signal-value signal-small";
+  }
+}
+
+setInterval(() => {
+  let now = getBDTime();
+  let sec = now.getSeconds();
+  let slot = Math.floor(sec / 30);
+  let remain = 29 - (sec % 30);
+  timerDiv.innerHTML = remain + "s";
+  
+  if(slot !== lastSlot) {
+    lastSlot = slot;
+    generateSignal();
+  }
+}, 100);
+
+function minimize() {
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('bubble').style.display = 'block';
+}
+
+function restore() {
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('bubble').style.display = 'none';
+}
+
+// ড্রাগ করার কোড
+let isDragging = false, offsetX, offsetY;
+let panel = document.getElementById('overlay');
+
+panel.addEventListener("mousedown", startDrag);
+panel.addEventListener("touchstart", startDrag);
+
+function startDrag(e) {
+  isDragging = true;
+  let p = e.touches ? e.touches[0] : e;
+  let rect = panel.getBoundingClientRect();
+  offsetX = p.clientX - rect.left;
+  offsetY = p.clientY - rect.top;
+  panel.style.cursor = "grabbing";
+  panel.style.top = rect.top + "px";
+  panel.style.left = rect.left + "px";
+  e.preventDefault();
+}
+
+document.addEventListener("mousemove", drag);
+document.addEventListener("touchmove", drag);
+document.addEventListener("mouseup", () => {
+  isDragging = false;
+  panel.style.cursor = "grab";
+});
+document.addEventListener("touchend", () => {
+  isDragging = false;
+});
+
+function drag(e) {
+  if(!isDragging) return;
+  let p = e.touches ? e.touches[0] : e;
+  let newLeft = p.clientX - offsetX;
+  let newTop = p.clientY - offsetY;
+  
+  newLeft = Math.max(5, Math.min(window.innerWidth - panel.offsetWidth - 5, newLeft));
+  newTop = Math.max(5, Math.min(window.innerHeight - panel.offsetHeight - 5, newTop));
+  
+  panel.style.left = newLeft + "px";
+  panel.style.top = newTop + "px";
+}
+
+generateSignal();
+</script>
+</body>
+</html>
